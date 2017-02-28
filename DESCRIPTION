@@ -1,14 +1,18 @@
 Package: docaids
-Title: A Test Package For Initializing R Packages On Github
+Title: Package For Helping Document Variables In R
 Version: 0.0.0.9000
 Authors@R: 'Bill Langford <bill.langford@rmit.edu.au> [aut, cre]'
-Description: This package is a dummy placeholder generated to fill in 
-    example values for what
-    would be generated for a new package.
+Description: R code is often first generated in a haphazard and exploratory way 
+    and this package helps to automatically discover and document the structure 
+    of local variables in functions.
 Depends: R (>= 3.3.2)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Imports: gtools, 
+    sourcetools, 
+    stringr, 
+    utils
 Suggests: knitr,
     rmarkdown,
     testthat
