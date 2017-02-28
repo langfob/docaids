@@ -15,7 +15,8 @@ knitr::opts_chunk$set(
 ```
 # docaids
 
-R code is often first generated in a haphazard and exploratory way and this 
+R code is often first generated in a haphazard and exploratory way, particularly 
+in a research environment.  This 
 package helps to automatically discover and document the structure of local 
 variables in functions.  This makes it easier to both understand the existing 
 code and document it in roxygen.  It currently provides 4 main services, 
