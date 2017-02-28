@@ -480,23 +480,6 @@ state_transition <- function (all_data, doc_line_numbers)
 
 #===============================================================================
 
-#' Test running generate_func_var_roxygen_comments() function
-#'
-#' Loads an existing input file and runs the function.
-#'
-#' @return Returns nothing (but in the future it should flag success/failure).
-#' @export
-
-test_generate_func_var_roxygen_comments <- function ()
-    {
-    infile = "/Users/bill/tzar/outputdata/biodivprobgen/default_runset/1836_marxan_simulated_annealing.completedTzarEmulation/consoleSinkOutput.temp.txt"
-    sinkFilePath = "/Users/bill/D/Projects/ProblemDifficulty/ProbDiff_Notes/funcvars.doc.txt"
-
-    generate_func_var_roxygen_comments (infile, sinkFilePath)
-    }
-
-#===============================================================================
-
 #' Read text from doc_vars_in_this_func() and convert to roxygen comments
 #'
 #' @param infile character string giving path and file name for input file

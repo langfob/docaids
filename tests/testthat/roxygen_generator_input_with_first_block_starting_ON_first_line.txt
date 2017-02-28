@@ -1,0 +1,46 @@
+>>>>>>>>>>>>>>>>>>>>>>>>  START doc_vars_in_this_func  >>>>>>>>>>>>>>>>>>>>>>>>
+get_bdpg_error_codes()
+bdpg_error_codes : List of 6
+ $ ERROR_STATUS_num_inside_or_within_group_links_less_than_one: num 1001
+ $ ERROR_STATUS_optimal_solution_is_not_optimal               : num 1002
+ $ ERROR_STATUS_num_nodes_per_group_must_be_at_least_2        : num 1003
+ $ ERROR_STATUS_duplicate_spp_in_Xu_input_file                : num 1004
+ $ ERROR_STATUS_unknown_spp_occ_FP_error_type                 : num 1005
+ $ ERROR_STATUS_unknown_spp_occ_FN_error_type                 : num 1006
+<<<<<<<<<<<<<<<<<<<<<<<<  END doc_vars_in_this_func  <<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+================================================================================
+================================================================================
+
+
+
+
+
+--------------------  Creating and populating nodes structure.
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>  START doc_vars_in_this_func  >>>>>>>>>>>>>>>>>>>>>>>>
+create_nodes_data_structure(derived_Xu_params@tot_num_nodes, 
+    derived_Xu_params@num_nodes_per_group, base_Xu_params@n__num_groups, 
+    bdpg_extended_params@num_independent_nodes_per_group)
+dependent_node_IDs :  int [1:61] 2 4 6 8 10 12 14 16 18 20 ...
+dependent_set_members :  logi [1:122] FALSE TRUE FALSE TRUE FALSE TRUE ...
+group_IDs :  num [1:122] 1 1 2 2 3 3 4 4 5 5 ...
+idx :  int 0
+independent_node_ID_starts :  num [1:61] 1 3 5 7 9 11 13 15 17 19 ...
+independent_node_IDs :  num [1:61] 1 3 5 7 9 11 13 15 17 19 ...
+n__num_groups :  num 61
+node_IDs :  int [1:122] 1 2 3 4 5 6 7 8 9 10 ...
+nodes : 'data.frame':	122 obs. of  3 variables:
+ $ node_ID             : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ group_ID            : num  1 1 2 2 3 3 4 4 5 5 ...
+ $ dependent_set_member: logi  FALSE TRUE FALSE TRUE FALSE TRUE ...
+num_independent_nodes_per_group :  num 1
+num_nodes_per_group :  num 2
+tot_num_nodes :  num 122
+<<<<<<<<<<<<<<<<<<<<<<<<  END doc_vars_in_this_func  <<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+--------------------  Linking nodes WITHIN each group.
+
