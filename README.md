@@ -2,7 +2,7 @@
 docaids
 =======
 
-R code is often first generated in a haphazard and exploratory way and this package helps to automatically discover and document the structure of local variables in functions. This makes it easier to both understand the existing code and document it in roxygen. It currently provides 3 main services, though all 4 are interrelated.
+R code is often first generated in a haphazard and exploratory way and this package helps to automatically discover and document the structure of local variables in functions. This makes it easier to both understand the existing code and document it in roxygen. It currently provides 4 main services, though all 4 of them are interrelated.
 
 -   Functions inserted into other functions you want to document
     -   **doc\_vars\_in\_this\_func** is the function that does most of the work. It finds all of the variables defined inside the function where it is called and then runs the R function "str" on each of them to show the structure of each variable.
