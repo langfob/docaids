@@ -1,5 +1,5 @@
 Package: docaids
-Title: Package For Helping Document Variables In R
+Title: Package For Helping Document Local Variables In R
 Version: 0.0.0.9000
 Authors@R: 'Bill Langford <bill.langford@rmit.edu.au> [aut, cre]'
 Description: R code is often first generated in a haphazard and exploratory way 
