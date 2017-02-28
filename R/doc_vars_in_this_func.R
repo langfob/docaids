@@ -62,6 +62,11 @@ doc_vars_in_this_func <- function (sys.call_ht = -1,
 #' func1, then the resulting counter's name would be
 #' "TEMPCTR___RM_THIS_AT_END__func1".
 #'
+#' @section Choice of default sys.call_ht:
+#' The default value for sys.call_ht has been set to -7 as a result of much
+#' trial and error to find what height landed on the right call in the stack.
+#' Be very careful if you give it a different value.
+#'
 #' @section Possible (though unlikely) problems:
 #' This method of creating names for counters is not foolproof, but it's good
 #' enough for the quick hacking of documentation aids that this code is
@@ -95,15 +100,50 @@ bump_global_ctr_for_cur_func <- function (sys.call_ht=-7,
                                           ctr_name_prefix =
                                               "TEMPCTR___RM_THIS_AT_END__")
     {
-    v7 <- utils::capture.output (sys.call (sys.call_ht))
-    syscall_tokens <- sourcetools::tokenize_string (v7)
+        #--------------------------------------------------------------
+        #  Build a name for the counter:
+        #  Look up the call stack to find the text of the call to the
+        #  function of interest, then extract it from the text.
+        #  It's the first token in the parsed call text.
+        #--------------------------------------------------------------
+
+    func_call_text <- utils::capture.output (sys.call (sys.call_ht))
+    syscall_tokens <- sourcetools::tokenize_string (func_call_text)
     func_name <- syscall_tokens [1, "value"]
+
+        #----------------------------------------------------------------
+        #  Build a (hopefully) unique counter name for the function of
+        #  interest by prepending its name with a weird prefix.
+        #----------------------------------------------------------------
+
     ctr_name <- paste0 (ctr_name_prefix, func_name)
+
+        #----------------------------------------------------------------
+        #  Increment the counter.
+        #  If this is the first time the function of interest has been
+        #  called in the program, no counter will exist for it yet,
+        #  so you need to initialize it before trying to increment it.
+        #----------------------------------------------------------------
 
     ctr <- 0
     if (exists (ctr_name))
         ctr <- get (ctr_name)
     ctr <- ctr + 1
+
+        #----------------------------------------------------------------------
+        #  Assign the value to it as a global variable.
+        #  This is of course, blasphemous behavior, but it's a very simple
+        #  way to solve the problem of explicitly not wanting to pass a
+        #  million function-specific counters around the code.
+        #  Another alternative might be to create a specific environment
+        #  just to hold all the counters, but that would mean requiring
+        #  the main program to create that environment.
+        #  Maybe that's ok, but the point of all this code is just a one-time
+        #  quick and dirty insertion in the program to grab the variable
+        #  information and then delete the calls to this function, so
+        #  it seems better to have as little overhead as possible to make
+        #  it useful.
+        #----------------------------------------------------------------------
 
     assign (ctr_name, ctr, envir = .GlobalEnv)
 
