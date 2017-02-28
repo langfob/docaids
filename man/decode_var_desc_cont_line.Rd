@@ -16,6 +16,10 @@ file}
 token type of the next line in the input file, e.g., "whitespace" or
 "symbol"}
 }
+\value{
+character string indicating the next state to transition to, e.g.,
+    "state__block_start"
+}
 \description{
 Title
 }

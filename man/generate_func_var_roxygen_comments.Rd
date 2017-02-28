@@ -6,6 +6,11 @@
 \usage{
 generate_func_var_roxygen_comments(infile, sinkFilePath)
 }
+\arguments{
+\item{infile}{character string giving path and file name for input file}
+
+\item{sinkFilePath}{character string giving path and file name for output file}
+}
 \value{
 Returns nothing
 }

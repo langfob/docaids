@@ -93,7 +93,7 @@ stop_due_to_unexpected_token <- function (token,
     {
     stop (paste0 ("\n\nUnexpected token at start of line ",
                   data_line_num,
-                  ".   Token = '", first_token,
+                  ".   Token = '", token,
                   "'.  Line = \n'", data_line,
                   "'\n\n"))
     }
@@ -278,7 +278,7 @@ decode_var_first_line_of_desc <- function (data_line,
 #'
 #' @inheritParams decode_var_first_line_of_desc
 #'
-#' @return
+#' @inherit decode_var_first_line_of_desc return
 
 decode_var_desc_cont_line <- function (data_line,
                                        data_line_num,
@@ -498,6 +498,9 @@ test_generate_func_var_roxygen_comments <- function ()
 #===============================================================================
 
 #' Read text from doc_vars_in_this_func() and convert to roxygen comments
+#'
+#' @param infile character string giving path and file name for input file
+#' @param sinkFilePath character string giving path and file name for output file
 #'
 #' @return Returns nothing
 #' @export
