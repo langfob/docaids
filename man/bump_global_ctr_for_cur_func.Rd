@@ -33,6 +33,13 @@ name with a strange string.  That prepend string is
 func1, then the resulting counter's name would be
 "TEMPCTR___RM_THIS_AT_END__func1".
 }
+\section{Choice of default sys.call_ht}{
+
+The default value for sys.call_ht has been set to -7 as a result of much
+trial and error to find what height landed on the right call in the stack.
+Be very careful if you give it a different value.
+}
+
 \section{Possible (though unlikely) problems}{
 
 This method of creating names for counters is not foolproof, but it's good
