@@ -233,26 +233,44 @@ remove_global_ctrs_if_desired <-
         #---------------------------------------------------------------------
 
     temp_ctrs_to_delete <- ls (pattern="TEMPCTR___RM_THIS_AT_END__*",
-                               envir=.GlobalEnv)
+                               envir=globalenv())  #.GlobalEnv)
     cat ("\n\nglobal counters that were created by bump_global_ctr_for_cur_func() = \n")
     print (temp_ctrs_to_delete)
 
-        #-----------------------------------------
+        #-----------------------------------------------------------------------
         #  Do the prompting and/or removals now.
-        #-----------------------------------------
+        #
+        #  Note that the arg to rm() must be "envir", not "environ".
+        #  ls() uses "environ".
+        #  Getting this wrong in the call to rm() gives a misleading error msg:
+        #
+        #      global counters that were created by bump_global_ctr_for_cur_func() =
+        #      [1] "TEMPCTR___RM_THIS_AT_END__inner_func" "TEMPCTR___RM_THIS_AT_END__outer_func"
+        #      Error in rm(list = temp_ctrs_to_delete, environ = globalenv()) :
+        #        ... must contain names or character strings
+        #      Called from: rm(list = temp_ctrs_to_delete, environ = globalenv())
+        #-----------------------------------------------------------------------
 
-    if (prompt_to_remove_ctrs)
+    if (prompt_to_remove_global_ctrs)
         {
         yes_or_no <- utils::menu(c("Yes", "No"),
                                  title=paste0 ("Remove all of these temporary ",
                                                "counters from the global ",
                                                 "environment?"))
         if (yes_or_no == 1)
-            rm (list = temp_ctrs_to_delete)
+            rm (list = temp_ctrs_to_delete, environ=globalenv())
 
-        } else if (remove_ctrs_without_prompt)  #  No prompting was requested
+        } else if (remove_global_ctrs_without_prompt)  #  No prompting was requested
         {
-        rm (list = temp_ctrs_to_delete)
+        rm (list = temp_ctrs_to_delete, envir = globalenv())
+
+#  environ rather than envir gives:
+# global counters that were created by bump_global_ctr_for_cur_func() =
+# [1] "TEMPCTR___RM_THIS_AT_END__inner_func" "TEMPCTR___RM_THIS_AT_END__outer_func"
+# Error in rm(list = temp_ctrs_to_delete, environ = globalenv()) :
+#   ... must contain names or character strings
+# Called from: rm(list = temp_ctrs_to_delete, environ = globalenv())
+#
         }
     }
 
