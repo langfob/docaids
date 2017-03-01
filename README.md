@@ -330,3 +330,8 @@ To run the follow-on code, we need to have redirected the output in a file or cu
     #'  $ m:List of 2
 
 Now the output has one large block of Roxygen comments for each of the two functions and these can be cut and pasted into the Roxygen documentation for those functions if so desired.
+
+Possible problem and a fix for it
+---------------------------------
+
+If you're running `generate_func_var_roxygen_comments_from_file()` and something crashes for some reason, it can leave the global counter variables still sitting in the global environment. That in turn, can cause no output to be written if using `doc_vars_in_this_func_once` because all the counters will already have passed 1 and therefore tell the function not to write any output. If this happens for all the functions and you're re-running the code a) without having removed all those global variables and b) having no blocks of str() output, then you can get a bizarre message. When this happened to me, I was able to get rid of that message by removing the global counters and then re-running. So, if you're getting a weird message, one thing to try is to get rid of the global counter variables, e.g., by calling `remove_global_ctrs_if_desired()`.
