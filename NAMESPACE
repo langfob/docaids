@@ -3,5 +3,6 @@
 export(bump_global_ctr_for_cur_func)
 export(doc_vars_in_this_func)
 export(doc_vars_in_this_func_once)
-export(generate_func_var_roxygen_comments)
-export(test_generate_func_var_roxygen_comments)
+export(generate_func_var_roxygen_comments_from_file)
+export(generate_func_var_roxygen_comments_from_vec)
+export(remove_global_ctrs_if_desired)

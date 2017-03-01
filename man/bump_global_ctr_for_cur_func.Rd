@@ -64,3 +64,7 @@ but each has a fix.
 }
 }
 
+\seealso{
+\code{\link{remove_global_ctrs_if_desired}} for cleanup of counters
+    at end of run
+}
