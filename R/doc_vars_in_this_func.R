@@ -93,6 +93,8 @@ doc_vars_in_this_func <- function (sys.call_ht = -1,
 #' @param ctr_name_prefix character string to prepend to function name when
 #'     building a counter name that is supposed to be unique
 #'
+#' @seealso \code{\link{remove_global_ctrs_if_desired}} for cleanup of counters
+#'     at end of run
 #' @return integer value of global counter for the current function
 #' @export
 
@@ -148,6 +150,110 @@ bump_global_ctr_for_cur_func <- function (sys.call_ht=-7,
     assign (ctr_name, ctr, envir = .GlobalEnv)
 
     return (ctr)
+    }
+
+#===============================================================================
+
+#' Remove temporary global counters if desired
+#'
+#' Running either of the functions \code{\link{bump_global_ctr_for_cur_func}},
+#' or \code{\link{doc_vars_in_this_func_once}} will lead to the creation of some
+#' temporary global variables used as counters.  As they are of no use outside
+#' these routines, they should probably be deleted at the end of the run to
+#' avoid cluttering the global environment with meaningless variables.  This
+#' function takes care of asking whether to delete them or not or just deleting
+#' them without asking, depending on how the arguments are set.  Since you will
+#' almost always want to delete these counters, the flags default to deleting
+#' without prompting.
+#'
+#' @section When to run this function:
+#'
+#' This function is meant to be run on its own, generally from the command line
+#' though that's not required.  Because the documenting functions are meant to
+#' be injected into other functions as simply as possible, there is no
+#' initialization code to add to the start of the program being documented.
+#' That means there could be leftover global counts from a previous run if
+#' they haven't been cleared.  Consequently, you should clear them before
+#' doing another documentation run.
+#'
+#' You can do this at the command line
+#' after a run or you can enforce their clearing by including this clearing
+#' action at the start of the program being documented, as a form of
+#' initialization.  I've chosen not to require that be done, because you can
+#' enforce that yourself if you want and because the consequences of not
+#' clearing aren't dire.  If you're using
+#' \code{\link{doc_vars_in_this_func_once}}, then the documenting code will
+#' just think that all the functions with pre-existing counters in the global
+#' environment have already been documented and won't write anything out.
+#' This can even be desirable behavior if you're just continually adding new
+#' functions to the set you're documenting and you've already grabbed the
+#' documentation for the ones already run.
+#'
+#' @section Ambiguous flag settings:
+#'
+#' There is one pairing of flag settings that whose settings could lead to
+#' confusion about what action will be taken, i.e.,
+#' \code{prompt_to_remove_global_ctrs} = TRUE __and__
+#' \code{remove_global_ctrs_without_prompt} = TRUE.  This is resolved by
+#' choosing the more cautious course and ignoring the value of the second flag
+#' and instead, prompting the user about whether to remove the variables.
+#'
+#' If both flags are FALSE, then nothing will be done, so it's equivalent to
+#' not calling this routine at all, other than the side effect of printing
+#' out the list of global counters.
+#'
+#' @param prompt_to_remove_global_ctrs boolean flag indicating whether to prompt
+#'     the user to ask whether they want to remove the global counters built by
+#'     \code{\link{bump_global_ctr_for_cur_func}}; TRUE implies prompt the user;
+#'     FALSE implies don't ask the user
+#' @param remove_global_ctrs_without_prompt boolean flag indicating whether to
+#'     remove the global counters built by
+#'     \code{\link{bump_global_ctr_for_cur_func}} without asking the user
+#'     whether they want to do that; TRUE implies remove without asking; FALSE
+#'     implies don't remove without asking
+#'
+#' @seealso \code{\link{doc_vars_in_this_func_once}}
+#' @seealso \code{\link{bump_global_ctr_for_cur_func}}
+#' @return Nothing
+#' @export
+#' @examples \dontrun{
+#' library (docaids)
+#' remove_global_ctrs_if_desired ()    #  Remove ctrs w/o prompting
+#' remove_global_ctrs_if_desired (TRUE, FALSE)    #  Remove ctrs if user says yes
+#' }
+
+remove_global_ctrs_if_desired <-
+    function (prompt_to_remove_global_ctrs = FALSE,
+              remove_global_ctrs_without_prompt = TRUE)
+    {
+        #---------------------------------------------------------------------
+        #  Make a list of all the global counter variables and print that
+        #  list for the user to check or to simply record what is going to
+        #  be deleted if deletion is automatic and a problem is found later.
+        #---------------------------------------------------------------------
+
+    temp_ctrs_to_delete <- ls (pattern="TEMPCTR___RM_THIS_AT_END__*",
+                               envir=.GlobalEnv)
+    cat ("\n\nglobal counters that were created by bump_global_ctr_for_cur_func() = \n")
+    print (temp_ctrs_to_delete)
+
+        #-----------------------------------------
+        #  Do the prompting and/or removals now.
+        #-----------------------------------------
+
+    if (prompt_to_remove_ctrs)
+        {
+        yes_or_no <- utils::menu(c("Yes", "No"),
+                                 title=paste0 ("Remove all of these temporary ",
+                                               "counters from the global ",
+                                                "environment?"))
+        if (yes_or_no == 1)
+            rm (list = temp_ctrs_to_delete)
+
+        } else if (remove_ctrs_without_prompt)  #  No prompting was requested
+        {
+        rm (list = temp_ctrs_to_delete)
+        }
     }
 
 #===============================================================================
