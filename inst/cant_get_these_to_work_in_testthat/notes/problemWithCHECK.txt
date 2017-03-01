@@ -1,0 +1,106 @@
+
+OUTPUT FROM RUNNING CHECK WITH:
+
+================================================================================
+
+#----------
+
+test_run_once <- function ()
+    {
+    outer_func (3, TRUE, "run_once_output.txt")
+    remove_global_ctrs_if_desired ()
+    }
+
+
+test_that("document variables in this function", {
+    file1_lines <- readLines ("/Users/bill/D/Projects/docaids/tests/testthat/run_once_output.txt")
+    file2_lines <- readLines ("/Users/bill/D/Projects/docaids/tests/testthat/correct_run_once_output.txt")
+
+    expect_equal (file1_lines, file2_lines)
+##  expect_equal_files ("run_once_output.txt", "correct_run_once_output.txt")
+
+  # expect_output_file (test_run_once(),
+  #                     "correct_run_once_output.txt")
+})
+
+#----------
+
+test_run_multi <- function ()
+    {
+    outer_func (3, FALSE, "run_multi_output.txt")
+    }
+
+test_that("document variables in this function", {
+    file1_lines <- readLines ("/Users/bill/D/Projects/docaids/tests/testthat/run_multi_output.txt")
+    file2_lines <- readLines ("/Users/bill/D/Projects/docaids/tests/testthat/correct_run_multi_output.txt")
+
+    expect_equal (file1_lines, file2_lines)
+#  expect_equal_files ("run_multi_output.txt", "correct_run_multi_output.txt")
+
+  # expect_output_file (test_run_multi(),
+  #                     "correct_run_multi_output.txt")
+})
+
+#----------
+
+
+================================================================================
+================================================================================
+================================================================================
+
+
+OUTPUT FROM CHECK:
+
+* checking tests ...
+  Running ‘testthat.R’ ERROR
+Running the tests in ‘tests/testthat.R’ failed.
+Last 13 lines of output:
+  #' \preformatted{
+  #' num_nodes_per_group :  num 2
+  #' }}
+  #' \subsection{tot_num_nodes}{
+  #' \preformatted{
+  #' tot_num_nodes :  num 122
+  testthat results ================================================================
+  OK: 5 SKIPPED: 0 FAILED: 2
+  1. Error: document variables in this function (@test_doc_vars_in_this_func.R#64)
+  2. Error: document variables in this function (@test_doc_vars_in_this_func.R#82)
+
+  Error: testthat unit tests failed
+  Execution halted
+* checking for unstated dependencies in vignettes ...
+ OK
+* checking package vignettes in ‘inst/doc’ ... OK
+* checking re-building of vignette outputs ... OK
+* DONE
+Status: 1 ERROR, 1 NOTE
+checking tests ... ERROR
+Running the tests in ‘tests/testthat.R’ failed.
+Last 13 lines of output:
+  #' \preformatted{
+  #' num_nodes_per_group :  num 2
+  #' }}
+  #' \subsection{tot_num_nodes}{
+  #' \preformatted{
+  #' tot_num_nodes :  num 122
+  testthat results ================================================================
+  OK: 5 SKIPPED: 0 FAILED: 2
+  1. Error: document variables in this function (@test_doc_vars_in_this_func.R#64)
+  2. Error: document variables in this function (@test_doc_vars_in_this_func.R#82)
+
+  Error: testthat unit tests failed
+  Execution halted
+
+checking R code for possible problems ... NOTE
+Found the following assignments to the global environment:
+File ‘docaids/R/doc_vars_in_this_func.R’:
+  assign(ctr_name, ctr, envir = .GlobalEnv)
+
+See
+  ‘/Users/bill/D/Projects/docaids.Rcheck/00check.log’
+for details.
+
+R CMD check results
+1 error  | 0 warnings | 1 note
+
+R CMD check succeeded

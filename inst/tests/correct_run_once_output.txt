@@ -1,0 +1,17 @@
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>  START doc_vars_in_this_func  >>>>>>>>>>>>>>>>>>>>>>>>
+inner_func(a_in_z = 3, run_once)
+a_in_z :  num 3
+run_once :  logi TRUE
+<<<<<<<<<<<<<<<<<<<<<<<<  END doc_vars_in_this_func  <<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>  START doc_vars_in_this_func  >>>>>>>>>>>>>>>>>>>>>>>>
+outer_func(3, TRUE, "run_once_output.txt")
+iii :  int 3
+num_times :  num 3
+run_once :  logi TRUE
+sinkFilePath :  chr "run_once_output.txt"
+tempConsoleOutFile : Classes 'file', 'connection'  atomic [1:1] 3
+<<<<<<<<<<<<<<<<<<<<<<<<  END doc_vars_in_this_func  <<<<<<<<<<<<<<<<<<<<<<<<<<
