@@ -26,14 +26,307 @@ devtools::install_github ("langfob/docaids")
 Example
 -------
 
-This is a basic example which shows you how to solve a common problem:
-- (An example that shows how to use the package to solve a simple problem.)
+Suppose that you are given some old, uncommented code with two cryptic functions, `inner_func()` and `outer_func()`:
 
 ``` r
-...
+library (docaids)
+
+inner_func <- function (a=3)
+    {
+    b = a + 1
+    ret_vals <- list (a=a, b=b)
+    
+    return (ret_vals)
+    }
+
+outer_func <- function (num_times=2)
+    {
+    n = 1
+    x = list (k="blah", j=123, m=list(e=c(10,20,30),f=77))
+    
+    for (iii in 1:num_times)
+        {
+        rv = inner_func (n)
+        n               = rv$b
+        cat ("\nn = ", n)
+        }
+        
+    cat ("\n")
+    }
 ```
 
-Overview
---------
+If you just want to know the structures of all the variables, then you can add a call to `doc_vars_in_this_func` at the end of each function. It doesn't actually matter where you put the call in the function, but putting it at the end means that any variable that might be created along the way will have been created and loaded by that last line so nothing will be missed.
 
--   (An overview that describes the main components of the package. For more complex packages, this will point to vignettes for more details.)
+``` r
+library (docaids)
+
+inner_func <- function (a=3)
+    {
+    b = a + 1
+    ret_vals <- list (a=a, b=b)
+    
+    doc_vars_in_this_func()
+    return (ret_vals)
+    }
+
+outer_func <- function (num_times=2)
+    {
+    n = 1
+    x = list (k="blah", j=123, m=list(e=c(10,20,30),f=77))
+    
+    for (iii in 1:num_times)
+        {
+        rv = inner_func (n)
+        n               = rv$b
+        cat ("\nn = ", n)
+        }
+        
+    cat ("\n")
+    doc_vars_in_this_func()
+    }
+    
+outer_func()
+#> 
+#> 
+#> >>>>>>>>>>>>>>>>>>>>>>>>  START doc_vars_in_this_func  >>>>>>>>>>>>>>>>>>>>>>>>
+#> inner_func(n)
+#> a :  num 1
+#> b :  num 2
+#> ret_vals : List of 2
+#>  $ a: num 1
+#>  $ b: num 2
+#> <<<<<<<<<<<<<<<<<<<<<<<<  END doc_vars_in_this_func  <<<<<<<<<<<<<<<<<<<<<<<<<<
+#> 
+#> n =  2
+#> 
+#> >>>>>>>>>>>>>>>>>>>>>>>>  START doc_vars_in_this_func  >>>>>>>>>>>>>>>>>>>>>>>>
+#> inner_func(n)
+#> a :  num 2
+#> b :  num 3
+#> ret_vals : List of 2
+#>  $ a: num 2
+#>  $ b: num 3
+#> <<<<<<<<<<<<<<<<<<<<<<<<  END doc_vars_in_this_func  <<<<<<<<<<<<<<<<<<<<<<<<<<
+#> 
+#> n =  3
+#> 
+#> 
+#> >>>>>>>>>>>>>>>>>>>>>>>>  START doc_vars_in_this_func  >>>>>>>>>>>>>>>>>>>>>>>>
+#> outer_func()
+#> iii :  int 2
+#> n :  num 3
+#> num_times :  num 2
+#> rv : List of 2
+#>  $ a: num 2
+#>  $ b: num 3
+#> x : List of 3
+#>  $ k: chr "blah"
+#>  $ j: num 123
+#>  $ m:List of 2
+#> <<<<<<<<<<<<<<<<<<<<<<<<  END doc_vars_in_this_func  <<<<<<<<<<<<<<<<<<<<<<<<<<
+```
+
+In the output, you can see that the str() calls for variables in `inner_func()` are repeated since `outer_func()` calls it multiple times. This is not a big problem for something that's only called a couple of times, but if a function is called many times, it can clutter the output with many repeats of identical information. Consequently, there is a second form of the call that makes sure to only write the output for a given function a specific number of times (with the default being to write it just once). That function is `doc_vars_in_this_func_once()`. Modifying the code again to use that function instead of `doc_vars_in_this_func()`, we get the following:
+
+``` r
+library (docaids)
+
+inner_func <- function (a=3)
+    {
+    b = a + 1
+    ret_vals <- list (a=a, b=b)
+    
+    doc_vars_in_this_func_once()
+    return (ret_vals)
+    }
+
+outer_func <- function (num_times=2)
+    {
+    n = 1
+    x = list (k="blah", j=123, m=list(e=c(10,20,30),f=77))
+    
+    for (iii in 1:num_times)
+        {
+        rv = inner_func (n)
+        n               = rv$b
+        cat ("\nn = ", n)
+        }
+        
+    cat ("\n")
+    doc_vars_in_this_func_once()
+    }
+    
+outer_func()
+#> 
+#> 
+#> >>>>>>>>>>>>>>>>>>>>>>>>  START doc_vars_in_this_func  >>>>>>>>>>>>>>>>>>>>>>>>
+#> inner_func(n)
+#> a :  num 1
+#> b :  num 2
+#> ret_vals : List of 2
+#>  $ a: num 1
+#>  $ b: num 2
+#> <<<<<<<<<<<<<<<<<<<<<<<<  END doc_vars_in_this_func  <<<<<<<<<<<<<<<<<<<<<<<<<<
+#> 
+#> n =  2
+#> n =  3
+#> 
+#> 
+#> >>>>>>>>>>>>>>>>>>>>>>>>  START doc_vars_in_this_func  >>>>>>>>>>>>>>>>>>>>>>>>
+#> outer_func()
+#> iii :  int 2
+#> n :  num 3
+#> num_times :  num 2
+#> rv : List of 2
+#>  $ a: num 2
+#>  $ b: num 3
+#> x : List of 3
+#>  $ k: chr "blah"
+#>  $ j: num 123
+#>  $ m:List of 2
+#> <<<<<<<<<<<<<<<<<<<<<<<<  END doc_vars_in_this_func  <<<<<<<<<<<<<<<<<<<<<<<<<<
+```
+
+This time, each function's information occurs only one time. We can now use that information simply to understand the functions better or we can run a follow-on function that will read the output and reformat it as chunks of Roxygen comments that can be pasted into the documentation for the corresponding function if that is useful.
+
+To run the follow-on code, we need to have redirected the output in a file or cut the output text from the console and pasted it into a file.
+
+    library (docaids)
+
+    inner_func <- function (a=3)
+        {
+        b = a + 1
+        ret_vals <- list (a=a, b=b)
+        
+        doc_vars_in_this_func_once()
+        return (ret_vals)
+        }
+
+    outer_func <- function (num_times=2)
+        {
+        n = 1
+        x = list (k="blah", j=123, m=list(e=c(10,20,30),f=77))
+        
+        for (iii in 1:num_times)
+            {
+            rv = inner_func (n)
+            n               = rv$b
+            cat ("\nn = ", n)
+            }
+            
+        cat ("\n")
+        doc_vars_in_this_func_once()
+        }
+
+
+        #  Open a file to echo console to and redirect output there.
+    doc_vars_outfile = "doc_vars_output.txt"
+    tempConsoleOutFile <- file (doc_vars_outfile, open="wt")
+    sink (tempConsoleOutFile, split=TRUE)
+
+        #  Run the program of interest.
+    outer_func()
+
+        #  Close the redirected output file.
+    sink ()
+    close (tempConsoleOutFile)
+
+        #  Read the doc_vars_in_this_func_once() output and 
+        #  write it back out formattted as roxygen comments, 
+        #  ignoring all other text that was in the previous output.
+    rox_outfile = "roxygen_outfile.txt"
+    generate_func_var_roxygen_comments_from_file (doc_vars_outfile, rox_outfile)
+
+
+
+    >>>>>>>>>>>>>>>>>>>>>>>>  START doc_vars_in_this_func  >>>>>>>>>>>>>>>>>>>>>>>>
+    inner_func(n)
+    a :  num 1
+    b :  num 2
+    ret_vals : List of 2
+     $ a: num 1
+     $ b: num 2
+    <<<<<<<<<<<<<<<<<<<<<<<<  END doc_vars_in_this_func  <<<<<<<<<<<<<<<<<<<<<<<<<<
+
+    n =  2
+    n =  3
+
+
+    >>>>>>>>>>>>>>>>>>>>>>>>  START doc_vars_in_this_func  >>>>>>>>>>>>>>>>>>>>>>>>
+    outer_func()
+    iii :  int 2
+    n :  num 3
+    num_times :  num 2
+    rv : List of 2
+     $ a: num 2
+     $ b: num 3
+    x : List of 3
+     $ k: chr "blah"
+     $ j: num 123
+     $ m:List of 2
+    <<<<<<<<<<<<<<<<<<<<<<<<  END doc_vars_in_this_func  <<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+
+
+
+
+    #'@section Local Variable Structures and examples:
+    #'Here is the output of str() for each variable visible in the function.
+    #'Note that the particular counts and values given are just examples to show
+    #'what the data might look like.
+    #'
+    #' \strong{FUNCTION:  inner_func}(n)
+    #' \subsection{a}{
+    #' \preformatted{
+    #' a :  num 1
+    #' }}
+    #' \subsection{b}{
+    #' \preformatted{
+    #' b :  num 2
+    #' }}
+    #' \subsection{ret_vals}{
+    #' \preformatted{
+    #' ret_vals : List of 2
+    #'  $ a: num 1
+    #'  $ b: num 2
+    #' }}
+
+
+
+
+
+
+    #'@section Local Variable Structures and examples:
+    #'Here is the output of str() for each variable visible in the function.
+    #'Note that the particular counts and values given are just examples to show
+    #'what the data might look like.
+    #'
+    #' \strong{FUNCTION:  outer_func}()
+    #' \subsection{iii}{
+    #' \preformatted{
+    #' iii :  int 2
+    #' }}
+    #' \subsection{n}{
+    #' \preformatted{
+    #' n :  num 3
+    #' }}
+    #' \subsection{num_times}{
+    #' \preformatted{
+    #' num_times :  num 2
+    #' }}
+    #' \subsection{rv}{
+    #' \preformatted{
+    #' rv : List of 2
+    #'  $ a: num 2
+    #'  $ b: num 3
+    #' }}
+    #' \subsection{x}{
+    #' \preformatted{
+    #' x : List of 3
+    #'  $ k: chr "blah"
+    #'  $ j: num 123
+    #'  $ m:List of 2
+
+Now the output has one large block of Roxygen comments for each of the two functions and these can be cut and pasted into the Roxygen documentation for those functions if so desired.
