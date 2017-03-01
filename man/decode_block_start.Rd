@@ -4,7 +4,7 @@
 \alias{decode_block_start}
 \title{Start new function block and clean up previous block if necessary}
 \usage{
-decode_block_start(prev_state, visual_separator = "\\n\\n\\n\\n")
+decode_block_start(prev_state, visual_separator)
 }
 \arguments{
 \item{prev_state}{character string indicating the previous state, e.g.,
