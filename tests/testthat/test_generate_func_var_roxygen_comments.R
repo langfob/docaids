@@ -14,7 +14,7 @@ correct_result_lines <- readLines (outfile_roxygen_correct)
 
 infile_AFTER_first = "roxygen_generator_input_with_first_block_starting_AFTER_first_line.txt"
 outfile_AFTER_first = "roxygen_outfile_AFTER_first_doc.txt"
-generate_func_var_roxygen_comments (infile_AFTER_first, outfile_AFTER_first)
+generate_func_var_roxygen_comments_from_file (infile_AFTER_first, outfile_AFTER_first)
 result_lines_AFTER_first <- readLines (outfile_AFTER_first)
 
 test_that("correct Roxygen comments are generated when starting AFTER first line", {
@@ -28,7 +28,7 @@ test_that("correct Roxygen comments are generated when starting AFTER first line
 
 infile_ON_first = "roxygen_generator_input_with_first_block_starting_ON_first_line.txt"
 outfile_ON_first = "roxygen_outfile_ON_first_doc.txt"
-generate_func_var_roxygen_comments (infile_ON_first, outfile_ON_first)
+generate_func_var_roxygen_comments_from_file (infile_ON_first, outfile_ON_first)
 result_lines_ON_first <- readLines (outfile_ON_first)
 
 test_that("correct Roxygen comments are generated when starting ON first line", {
