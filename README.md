@@ -331,6 +331,150 @@ To run the follow-on code, we need to have redirected the output in a file or cu
 
 Now the output has one large block of Roxygen comments for each of the two functions and these can be cut and pasted into the Roxygen documentation for those functions if so desired.
 
+For example, you could insert some Roxygen comments in front of the definitions of and as follows, with the generated Roxygen comments pasted in from above:
+
+    #' The inner function that is looped over
+    #'
+    #' The first paragraph of describing the inner function.
+    #'
+    #' The second paragraph that describes all the details of the inner function.
+    #'
+    #'#'@section Local Variable Structures and examples:
+    #'Here is the output of str() for each variable visible in the function.
+    #'Note that the particular counts and values given are just examples to show
+    #'what the data might look like.
+    #'
+    #' \strong{FUNCTION:  inner_func}(n)
+    #' \subsection{a}{
+    #' \preformatted{
+    #' a :  num 1
+    #' }}
+    #' \subsection{b}{
+    #' \preformatted{
+    #' b :  num 2
+    #' }}
+    #' \subsection{ret_vals}{
+    #' \preformatted{
+    #' ret_vals : List of 2
+    #'  $ a: num 1
+    #'  $ b: num 2
+    #' }}
+    #'
+    #' @param a some integer argument to \code{inner()}
+
+    inner_func <- function (a=3)
+        {
+        b = a + 1
+        ret_vals <- list (a=a, b=b)
+
+        return (ret_vals)
+        }
+
+    #' The outer function that does the looping
+    #'
+    #' The first paragraph of describing the outer function.
+    #'
+    #' The second paragraph that describes all the details of the inner function.
+    #'
+    #'@section Local Variable Structures and examples:
+    #'Here is the output of str() for each variable visible in the function.
+    #'Note that the particular counts and values given are just examples to show
+    #'what the data might look like.
+    #'
+    #' \subsection{iii}{
+    #' \preformatted{
+    #' iii :  int 2
+    #' }}
+    #' \subsection{n}{
+    #' \preformatted{
+    #' n :  num 3
+    #' }}
+    #' \subsection{num_times}{
+    #' \preformatted{
+    #' num_times :  num 2
+    #' }}
+    #' \subsection{rv}{
+    #' \preformatted{
+    #' rv : List of 2
+    #'  $ a: num 2
+    #'  $ b: num 3
+    #' }}
+    #' \subsection{x}{
+    #' \preformatted{
+    #' x : List of 3
+    #'  $ k: chr "blah"
+    #'  $ j: num 123
+    #'  $ m:List of 2
+    #'
+    #' @param num_times integer number of times to loop over \code{inner()}
+
+    outer_func <- function (num_times=2)
+        {
+        n = 1
+        x = list (k="blah", j=123, m=list(e=c(10,20,30),f=77))
+
+        for (iii in 1:num_times)
+            {
+            rv = inner_func (n)
+            n               = rv$b
+            cat ("\nn = ", n)
+            }
+
+        cat ("\n")
+        }
+
+After the Roxygen is run over the code (e.g., by choosing the "Document" option in RStudio's Build menu), a help page will exist for both of the functions. Note that I have removed the line:
+
+    #' \strong{FUNCTION:  outer_func}()
+
+from the `outer_func` pasted comments but left the corresponding line in place for `inner_func`. They're originally generated so that you can tell what function the comments apply to, but are generally best left removed for the pasting. I've only left the FUNCTION comment in the `inner_func` to show what happens when it's left in.
+
+Here is a rough approximation to the help pages that result for `inner_func`. It's not possible to render it (in the markdown used to generate this README file) in exactly the same way that R renders them. Note that as well as different fonts and font sizes, I've had to substitute dashes in place of spaces for better display where markdown collapses all white space down to a single space.
+
+------------------------------------------------------------------------
+
+inner\_func {docaids} -------------------------------------- R Documentation
+
+**The inner function that is looped over**
+
+**Description**
+
+The first paragraph of describing the inner function.
+
+**Usage**
+
+`inner_func(a = 3)`
+
+**Arguments**
+
+`a` some integer argument to `inner()`
+
+**Details**
+
+The second paragraph that describes all the details of the inner function.
+
+**Local Variable Structures and examples**
+
+Here is the output of str() for each variable visible in the function. Note that the particular counts and values given are just examples to show what the data might look like.
+
+**FUNCTION: inner\_func(n)** &lt;&lt;---------- *This is the line that should be removed*
+
+***a***
+
+`a :  num 1`
+
+***b***
+
+`b :  num 2`
+
+***ret\_vals***
+
+`ret_vals : List of 2`
+`$ a: num 1`
+`$ b: num 2`
+
+------------------------------------------------------------------------
+
 Possible problem and a fix for it
 ---------------------------------
 
