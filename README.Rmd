@@ -389,7 +389,7 @@ After the Roxygen is run over the code (e.g., by choosing the "Document" option 
 ```
 #' \strong{FUNCTION:  outer_func}()
 ```
-from the `outer_func` pasted comments but left the corresponding line in place for `inner_func`.  They're originally generated so that you can tell what function the comments apply to, but are generally best left removed for the pasting.  I've only left the FUNCTION comment in the `inner_func` to show what happens when it's left in.
+from the `outer_func` pasted comments but left the corresponding line in place for `inner_func`.  They're originally generated so that you can tell what function the comments apply to, but are generally best removed for the pasting.  I've only left the FUNCTION comment in the `inner_func` to show what happens when it's left in.
 
 Here is a rough approximation to the help pages that result for `inner_func`.  It's not possible to render it (in the markdown used to generate this README file) in  exactly the same way that R renders them. Note that as well as different fonts and font sizes, I've had to substitute dashes in place of spaces for better display where markdown collapses all white space down to a single space.
 
@@ -431,9 +431,11 @@ Here is the output of str() for each variable visible in the function. Note that
 
 **_ret_vals_**  
 
-`ret_vals : List of 2`  
-`  $ a: num 1`  
-`  $ b: num 2`  
+```
+ret_vals : List of 2  
+ $ a: num 1
+ $ b: num 2
+```
 
 -----
 
