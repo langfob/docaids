@@ -4,7 +4,7 @@
 \alias{state_transition}
 \title{Parse reduced input text array and write outputs depending on state}
 \usage{
-state_transition(all_data, doc_line_numbers, visual_separator)
+state_transition(all_data, doc_line_numbers)
 }
 \arguments{
 \item{all_data}{Vector of character strings, each entry containing the text
@@ -15,10 +15,6 @@ into the reduced set of lines of interest in the original data.  For
 example, lines 1 and 2 of the original input may be irrelevant, while
 line 3 of the original file is the first useful line for parsing, so
 doc_line_numbers[1] = 3.}
-
-\item{visual_separator}{character string to write between the end of the
-previous block and the new block to make it easier to pick out where
-one ends and the other begins}
 }
 \value{
 nothing
