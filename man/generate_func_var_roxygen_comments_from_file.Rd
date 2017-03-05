@@ -19,6 +19,14 @@ This is a wrapper function for
 \code{\link{generate_func_var_roxygen_comments_from_vec}} to load the
 strings to be parsed from a file into the vector of strings.
 }
+\examples{
+\dontrun{
+workdir = "/Users/bill/tzar/outputdata/biodivprobgen/default_runset/1837_marxan_simulated_annealing.completedTzarEmulation"
+infile = file.path (workdir, "consoleSinkOutput.temp.txt")
+outfile = file.path (workdir, "localvar_roxygen_comments.txt")
+generate_func_var_roxygen_comments_from_file (infile, outfile)
+}
+}
 \seealso{
 \code{\link{generate_func_var_roxygen_comments_from_vec}}
 }

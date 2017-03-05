@@ -477,6 +477,19 @@ state_transition <- function (all_data, doc_line_numbers)
         }  #  end for - (cur_line_num in 1:num_doc_lines)
 
         #-----------------------------------------------------------------------
+        #  If things were well-behaved, then the looping finished the input
+        #  lines but didn't find the EOF since there was more output in
+        #  the log file after the last function documentation output.
+        #  In that case, there's still an open variable in need of closing
+        #  up, so do that now if necessary.
+        #  If you don't do this, then you get an error during the Build and
+        #  roxygen phase of making the package.  Here's an example:
+        #      Warning: @section [gen_bdprob.R#10]: mismatched braces or quote
+        #-----------------------------------------------------------------------
+
+    finish_up (prev_state)
+
+        #-----------------------------------------------------------------------
         #  R CMD CHECK has a problem in using the output from this routine
         #  when it is written to a file and there is no newline at the end,
         #  so add one here.
@@ -504,6 +517,12 @@ state_transition <- function (all_data, doc_line_numbers)
 #'
 #' @seealso \code{\link{generate_func_var_roxygen_comments_from_vec}}
 #' @return Returns nothing
+#' @examples \dontrun{
+#' workdir = "/Users/bill/tzar/outputdata/biodivprobgen/default_runset/1837_marxan_simulated_annealing.completedTzarEmulation"
+#' infile = file.path (workdir, "consoleSinkOutput.temp.txt")
+#' outfile = file.path (workdir, "localvar_roxygen_comments.txt")
+#' generate_func_var_roxygen_comments_from_file (infile, outfile)
+#' }
 #' @export
 
 generate_func_var_roxygen_comments_from_file <- function (infile, sinkFilePath)
